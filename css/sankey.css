@@ -1,0 +1,133 @@
+@font-face {
+    font-family: Gabriela;
+    src: url(font/Gabriela-Regular.ttf);
+    font-weight:400;
+}
+
+@font-face {
+    font-family: FontAwesome;
+    src: url(font/fontawesome-webfont.ttf);
+    font-weight:400;
+}
+
+body {
+  -webkit-user-select: none; /* Chrome/Safari */        
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* IE10+ */
+}
+
+.node rect {
+  cursor: pointer;
+  fill-opacity: .7;
+  shape-rendering: crispEdges;
+}
+ 
+text {
+  font-family: 'Gabriela', serif;
+  /*pointer-events: none;*/
+  text-shadow: 0 1px 0 #fff;
+}
+
+text.back-icon,
+text.detail-icon {
+  font-family: 'FontAwesome', serif;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+}
+
+.node:hover > text.back-icon,
+.node:hover > text.detail-icon {
+  opacity: .7;
+}
+
+.node > .node-title {
+  pointer-events: none;
+}
+
+.node:hover rect {
+  fill-opacity: 1;
+}
+ 
+.link {
+  fill: none;
+  stroke: #000;
+  stroke-opacity: .1;
+}
+ 
+.link:hover {
+  stroke-opacity: .5;
+}
+
+.node[name="hidden"],
+.link[name="hidden"] {
+  display: none;
+  font-size: 0px;
+}
+
+.back text {
+  stroke: #FFFFFF;
+}
+
+.slice:hover path {
+  opacity: .5;
+}
+
+.halfPie .slice {
+  cursor: pointer;
+}
+
+.halfPie text {
+  font-size: 10px;
+}
+
+div#info {
+  /*background-color: #000000;
+  opacity: 0.4;
+  color: #ffffff;*/
+  word-wrap: break-word;
+  font-family: 'Gabriela', serif;
+}
+
+div#info h4 {
+  font-family: 'Gabriela', serif;
+}
+
+div#info .row {
+  margin-bottom: 15px;
+  color: #999999;
+}
+
+div#info .row p {
+  margin: 0px;
+}
+
+div#info #startdate {
+  text-align: right;
+  border-right: 1px solid;
+}
+
+.label {
+  display: inline-block;
+}
+
+#breadcrumb > svg {
+  height: 100px!important;
+}
+
+#breadcrumb line.last {
+  display: none;
+}
+
+#breadcrumb circle {
+  cursor: pointer;
+}
+
+#breadcrumb circle:hover {
+  fill: rgb(214, 39, 40);
+}
+
+.breadcrumb-text {
+  font-family: 'Gabriela', serif;
+  font-size: 10px;
+}
