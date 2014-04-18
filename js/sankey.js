@@ -84,10 +84,25 @@ d3.sankey = function() {
       node.targetLinks = [];
     });
     links.forEach(function(link) {
-      var source = link.source,
+      /*var source = link.source,
           target = link.target;
       if (typeof source === "number") source = link.source = nodes[link.source];
-      if (typeof target === "number") target = link.target = nodes[link.target];
+      if (typeof target === "number") target = link.target = nodes[link.target];*/
+
+      var source, target;
+      
+      if (typeof link.source === "number") {
+        source = link.source = _.where(nodes, { id: link.source })[0];
+      } else {
+        source = link.source = _.where(nodes, { id: link.source.id })[0];
+      }
+
+      if (typeof link.target === "number") {
+        target = link.target = _.where(nodes, { id: link.target })[0];
+      } else {
+        target = link.target = _.where(nodes, { id: link.target.id })[0];
+      }
+
       source.sourceLinks.push(link);
       target.targetLinks.push(link);
     });
@@ -117,7 +132,7 @@ d3.sankey = function() {
       remainingNodes.forEach(function(node) {
         node.x = x;
         node.dx = nodeWidth;
-        node.sourceLinks.forEach(function(link) {
+	node.sourceLinks.forEach(function(link) {
           nextNodes.push(link.target);
         });
       });

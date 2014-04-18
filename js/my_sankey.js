@@ -3,12 +3,13 @@ var graph = {nodes:[], links:[]};
 var groupMap = {};
 var groupList = [];
 var history = [];
+var halfPieHeight = 100;
 var textLength = 38;
-//var maxUnlinkedLinks = 10;
+var maxUnlinkedLinks = 40;
 
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
     width = $(window).width() - margin.left - margin.right,
-    height = $(window).height() - margin.top - margin.bottom - 120;
+    height = $(window).height() - margin.top - margin.bottom - 200;
  
 var formatNumber = d3.format(",.0f"), // zero decimal places
     format = function(d) { return formatNumber(d) + " " + units; },
@@ -17,9 +18,9 @@ var formatNumber = d3.format(",.0f"), // zero decimal places
 // append the svg canvas to the page
 var svg = d3.select("#chart").append("svg")
     .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+    .attr("height", height + margin.top + margin.bottom + halfPieHeight)
   .append("g")
-    .attr("transform", "translate(" + (margin.left + 300) + "," + margin.top + ")");
+    .attr("transform", "translate(" + (margin.left + 280) + "," + margin.top + ")");
  
 // Set the sankey diagram properties
 var sankey = d3.sankey()
@@ -180,28 +181,29 @@ function getData(source, target) {
     });
 
     //remove nodes without links if > n
-    /*var hiddenlinks = _.where(graph.links, { name: "hidden" });
+    var hiddenlinks = _.where(graph.links, { name: "hidden" });
+    var hiddennodes = 0;
     if (hiddenlinks.length > maxUnlinkedLinks) {
 
       _.each(_.last(hiddenlinks, hiddenlinks.length - maxUnlinkedLinks), function(link) {
         //related node
 	var node = _.where(graph.nodes, { id: link.source })[0];
-	//node.name = "hidden";
-
+	//node.unlinked = "unlinked";
 	graph.nodes = _.without(graph.nodes, node);
 	graph.links = _.without(graph.links, link);
-      });
-    }*/
-    
-    //var hiddennodes = _.where(graph.nodes, { name: "hidden" });
-    //var visiblesourcenodes = sourcenodes.length - hiddennodes.length + 1;
-    var newheight = sourcenodes.length * 25 < height ? height : sourcenodes.length * 25;
 
-    var rightnodes = graph.nodes.length - sourcenodes.length;
-    newheight = newheight < rightnodes * 25 ?  rightnodes * 25 : newheight;
+	hiddennodes++;
+      });
+    }
+    
+    var visiblesourcelength = sourcenodes.length - hiddennodes;
+    var newheight = visiblesourcelength * 25 < height ? height : visiblesourcelength * 25;
+
+    var rightlength = graph.nodes.length - visiblesourcelength;
+    newheight = newheight < rightlength * 25 ?  rightlength * 25 : newheight;
   
     sankey.size([width - 600, newheight]);
-    $("svg").height(newheight + 100);
+    $("svg").height(newheight + halfPieHeight);
     
     sankey
         .nodes(graph.nodes)
