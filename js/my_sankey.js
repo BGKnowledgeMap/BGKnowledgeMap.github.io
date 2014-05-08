@@ -51,7 +51,7 @@ function getData(source, target) {
       "MACROAREA",
       "PROMOTORE PROGETTO",
       "COMMITTENTE/FINANZIATORE",
-      "BUDGET",
+      //"BUDGET",
       "PARTNERS"
     ];
 
