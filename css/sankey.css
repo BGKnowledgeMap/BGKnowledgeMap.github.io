@@ -29,6 +29,13 @@ text {
   text-shadow: 0 1px 0 #fff;
 }
 
+.mail-icon {
+  font-family: 'FontAwesome', serif;
+  font-size: 20px;
+  font-style: normal;
+  cursor: pointer;
+}
+
 text.back-icon,
 text.detail-icon {
   font-family: 'FontAwesome', serif;
@@ -90,13 +97,13 @@ div#info {
   font-family: 'Gabriela', serif;
 }
 
-/*div#info td {
+div#info td {
   vertical-align: top;
-}*/
+}
 
 div#info h4 {
   font-family: 'Gabriela', serif;
-  /*margin: 0px 20px 0px 10px;*/
+  margin: 0px 20px 0px 10px;
 }
 
 div#info .row {

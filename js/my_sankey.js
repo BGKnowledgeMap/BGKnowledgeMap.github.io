@@ -7,6 +7,7 @@ var halfPieHeight = 100;
 var textLength = 42;
 var maxUnlinkedLinks = 40;
 var lastEnteredNode;
+var emailAddress = '';
 
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
     width = $(window).width() - margin.left - margin.right,
@@ -414,6 +415,8 @@ function showProjectDetail(projectName) {
       $('#info .modal-title').text(d["TITOLO"]);
       $('#info #startdate .date').text(d["DATA INIZIO"]);
       $('#info #enddate .date').text(d["DATA FINE"]);
+
+      $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName);
 
       $('#info .modal-info').append(d["ABSTRACT"]);
       $('#info .modal-info').append($('<br>'));
