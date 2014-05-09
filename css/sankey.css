@@ -42,11 +42,6 @@ text.detail-icon.show {
   opacity: .7;
 }
 
-.node:hover > text.back-icon,
-.node:hover > text.detail-icon {
-  /*opacity: .7;*/
-}
-
 .node > .node-title {
   pointer-events: none;
 }

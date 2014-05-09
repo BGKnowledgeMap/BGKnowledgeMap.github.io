@@ -421,7 +421,8 @@ function showProjectDetail(projectName) {
 
       //websites
       _.each(d["WEBSITES"], function(website) {
-        var a = $('<a></a>').attr('href', website).text(website);
+        var http = website.substring(0, 7) == "http://" ? "" : "http://";
+        var a = $('<a></a>').attr('href', http + website).text(website);
          $('#info .modal-info').append(a);
          $('#info .modal-info').append($('<br>'));
          $('#info .modal-info').append($('<br>'));
@@ -475,6 +476,21 @@ function zoomOutNode(node) {
     next = next.nextSibling;
   }
 }
+
+/*function zoomOutAllNodes() {
+  var nodes = d3.selectAll(".node");
+    //.attr("height", function(d) { });  
+
+  console.log(nodes);
+  
+  nodes.select("rect")
+    .transition()
+    .attr("height", function(d) { return d3.select(this).attr("initialHeight") });
+
+  nodes
+    .transition()
+    .attr("transform", function(d) { return d3.select(this).attr("initialTransform") });
+}*/
 
 function getXYFromTranslate(attr) {
   var split = attr.split(",");
