@@ -4,7 +4,7 @@ var groupMap = {};
 var groupList = [];
 var history = [];
 var halfPieHeight = 100;
-var textLength = 38;
+var textLength = 42;
 var maxUnlinkedLinks = 40;
 var lastEnteredNode;
 
@@ -21,7 +21,7 @@ var svg = d3.select("#chart").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom + halfPieHeight)
   .append("g")
-    .attr("transform", "translate(" + (margin.left + 280) + "," + margin.top + ")");
+    .attr("transform", "translate(" + (margin.left + 320) + "," + margin.top + ")");
  
 // Set the sankey diagram properties
 var sankey = d3.sankey()
@@ -217,7 +217,7 @@ function getData(source, target) {
     var rightlength = graph.nodes.length - visiblesourcelength;
     newheight = newheight < rightlength * 25 ?  rightlength * 25 : newheight;
   
-    sankey.size([width - 600, newheight]);
+    sankey.size([width - 660, newheight]);
     $("svg").height(newheight + halfPieHeight);
     
     sankey

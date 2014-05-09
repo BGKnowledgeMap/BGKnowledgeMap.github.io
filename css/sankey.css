@@ -1,13 +1,13 @@
 @font-face {
     font-family: Gabriela;
     src: url(font/Gabriela-Regular.ttf);
-    font-weight:400;
+    font-weight: 400;
 }
 
 @font-face {
     font-family: FontAwesome;
     src: url(font/fontawesome-webfont.ttf);
-    font-weight:400;
+    font-weight: 400;
 }
 
 body {
@@ -95,8 +95,13 @@ div#info {
   font-family: 'Gabriela', serif;
 }
 
+/*div#info td {
+  vertical-align: top;
+}*/
+
 div#info h4 {
   font-family: 'Gabriela', serif;
+  /*margin: 0px 20px 0px 10px;*/
 }
 
 div#info .row {

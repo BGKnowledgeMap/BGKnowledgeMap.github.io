@@ -5,6 +5,15 @@
 <link rel="stylesheet" href="css/sankey.css">
 <body>
 
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/it_IT/sdk.js#xfbml=1&appId=266887920159637&version=v2.0";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
 <div id="breadcrumb"></div>
 <div id="chart"></div>
 
@@ -14,7 +23,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title"></h4>
+	<h4 class="modal-title"></h4>
       </div>
       <div class="modal-body">
         <div class="row">

@@ -16,7 +16,7 @@ halfPie = function(source, piedata) {
         r2 = r - 8,
         ir2 = 0,
         pi = Math.PI,
-	      color = color;
+        color = color;
 
     /**interno**/
     var vis2 = d3.select(source)
