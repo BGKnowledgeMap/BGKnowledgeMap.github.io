@@ -1,4 +1,7 @@
 halfPie = function(source, piedata) {
+    d3.select(".halfPie").remove();
+    d3.select(".halfPie2").remove();
+
     piedata = _.without(piedata, _.where(piedata, {label: d3.select(source).attr("group")})[0]);
     //var height = d3.select(source).select("rect").attr("height");
     var height = 100;
@@ -65,7 +68,7 @@ halfPie = function(source, piedata) {
         .enter()                            
         .append("g") 
           .attr("class", "slice")
-	  .on("click", function(d) {
+	  .on(click, function(d) {
 	    d3.event.preventDefault();
 	    d3.event.stopPropagation();
 

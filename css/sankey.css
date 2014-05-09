@@ -37,9 +37,14 @@ text.detail-icon {
   opacity: 0;
 }
 
+text.back-icon.show,
+text.detail-icon.show {
+  opacity: .7;
+}
+
 .node:hover > text.back-icon,
 .node:hover > text.detail-icon {
-  opacity: .7;
+  /*opacity: .7;*/
 }
 
 .node > .node-title {

@@ -6,6 +6,7 @@ var history = [];
 var halfPieHeight = 100;
 var textLength = 38;
 var maxUnlinkedLinks = 40;
+var lastEnteredNode;
 
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
     width = $(window).width() - margin.left - margin.right,
@@ -29,6 +30,20 @@ var sankey = d3.sankey()
     .size([width, height]);
  
 var path = sankey.link();
+
+var nodeenter = "mouseenter";
+var nodeleave = "mouseleave";
+
+if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+  nodeenter = "touchstart"; 
+  nodeleave = "touchcancel"; 
+}
+
+var click = "click";
+
+if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+  click = "touchstart"; 
+}
 
 function getData(source, target) {
   history.push({source: source, target: target});
@@ -245,7 +260,16 @@ function plotGraph(source) {
       .attr("transform", function(d) { return "translate(" + 0 + "," + d.y + ")" })
       .attr("group", function(d) { return d.group })
       .attr("name", function(d) { return d.name })
-      .on("mouseenter", function(d) {
+      .on(nodeenter, function(d) {
+        d3.event.preventDefault();
+	d3.event.stopPropagation();
+
+	if (lastEnteredNode && lastEnteredNode != this) onNodeLeave(lastEnteredNode, source);
+	lastEnteredNode = this;
+
+        d3.select(this).select(".detail-icon").classed("show", true);
+        d3.select(this).select(".back-icon").classed("show", true);
+
         if (d3.select(this).select(".detail-icon")[0][0] && d3.select(this).select(".back-icon")[0][0]) {
 	  var bis = true;
 	} else {
@@ -271,8 +295,9 @@ function plotGraph(source) {
 	  zoomInNode(this, diff);
 	}
       })
-      .on("mouseleave", function() {
-        if (d3.select(this).select(".detail-icon")[0][0] && d3.select(this).select(".back-icon")[0][0]) {
+      .on(nodeleave, function() {
+        onNodeLeave(this, source);
+	/*if (d3.select(this).select(".detail-icon")[0][0] && d3.select(this).select(".back-icon")[0][0]) {
 	  var bis = true;
 	} else {
 	  var bis = false;
@@ -297,7 +322,7 @@ function plotGraph(source) {
 	} else {
 	  d3.select(this).select(".detail-icon").transition().duration(300).attr("y", y);
 	  d3.select(this).select(".back-icon").transition().duration(300).attr("y", y);
-	}
+	}*/
       });
 
   nodeg//.transition()
@@ -370,14 +395,19 @@ function plotGraph(source) {
         return d.name;
       })
       .text(function() { return "\uf129" })
-      .on("click", function() {
+      .on(click, function() {
         showProjectDetail($(this).attr("name"));
       });
 
-  //$("[name=hidden]").remove(); //need for zoomIn funcionality
+  window.addEventListener('touchstart', function() {
+    if (lastEnteredNode) onNodeLeave(lastEnteredNode, source);
+  }, false);
 };
 
 function showProjectDetail(projectName) {
+  d3.event.preventDefault();
+  d3.event.stopPropagation();
+
   $('#info .modal-info').empty();
   _.each(inputData, function(d) {
     if (_.contains(d["TITOLO"], projectName)) {
@@ -454,6 +484,9 @@ function getXYFromTranslate(attr) {
 }
 
 function back(backTo) {
+  d3.event.preventDefault();
+  d3.event.stopPropagation();
+
   if (!backTo) {
     history = _.initial(history);
     var backTo = _.last(history);
@@ -477,4 +510,36 @@ function sizedText(string, n) {
   if (string.length > n + 1) points = '...';
   var string = string.substring(0, n);
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase() + points;
+}
+
+function onNodeLeave(elm, source) {
+  d3.select(elm).select(".detail-icon").classed("show", false);
+  d3.select(elm).select(".back-icon").classed("show", false);
+
+  d3.select(".halfPie").remove();
+  d3.select(".halfPie2").remove();
+
+  if (d3.select(elm).select(".detail-icon")[0][0] && d3.select(elm).select(".back-icon")[0][0]) {
+    var bis = true;
+  } else {
+    var bis = false;
+  }
+
+  if (d3.select(elm).select("rect").attr("height") != d3.select(elm).select("rect").attr("initialHeight")) {
+    zoomOutNode(elm);
+  }
+
+  if (source.name && d3.select(elm).attr("group") == source.group && d3.select(elm).attr("name") != source.name) {
+    d3.select(elm).select("rect").style("fill", "#CCCCCC");
+  }
+  var y = d3.select(elm).select("rect").attr("initialHeight") / 2;
+  d3.select(elm).select(".node-title").transition().duration(300).attr("x", 42).attr("y", y).attr("text-anchor", "start");
+	
+  if (bis) {
+    d3.select(elm).select(".detail-icon").transition().duration(300).attr("y", y + 25);
+    d3.select(elm).select(".back-icon").transition().duration(300).attr("y", y - 5);
+  } else {
+    d3.select(elm).select(".detail-icon").transition().duration(300).attr("y", y);
+    d3.select(elm).select(".back-icon").transition().duration(300).attr("y", y);
+  }
 }
