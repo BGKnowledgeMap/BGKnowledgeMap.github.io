@@ -7,7 +7,7 @@ var halfPieHeight = 100;
 var textLength = 42;
 var maxUnlinkedLinks = 40;
 var lastEnteredNode;
-var emailAddress = '';
+var emailAddress = 'smartercitizens@unibg.it';
 
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
     width = $(window).width() - margin.left - margin.right,
@@ -279,6 +279,12 @@ function plotGraph(source) {
 	
 	d3.select(this).select("rect").style("fill", color(d3.select(this).attr("name")));
 	d3.select(this).select(".node-title").transition().duration(300).attr("x", -10).attr("text-anchor", "end");
+
+	if (source.group == d3.select(this).attr("group")) {
+          d3.select(this).select(".node-title").text(sizedText(d3.select(this).attr("name"), textLength));
+	} else {
+	  d3.select(this).select(".node-title").text(sizedText(d3.select(this).attr("name"), textLength + 10));
+	}
 	
         halfPie(this, groupList);
 	if (d3.select(this).select("rect").attr("height") < 100) {
@@ -358,7 +364,10 @@ function plotGraph(source) {
       .attr("y", function(d) { return d.dy / 2; })
       .attr("dy", ".35em")
       .attr("text-anchor", "start")
-      .text(function(d) { if (d.name) return sizedText(d.name, textLength) })
+      .text(function(d) {
+        if (d.group == source.group) return sizedText(d.name, textLength + 10)
+	else return sizedText(d.name, textLength)
+      })
       .attr("opacity", 0)
       .transition().duration(500)
         .attr("opacity", 1);
@@ -416,7 +425,7 @@ function showProjectDetail(projectName) {
       $('#info #startdate .date').text(d["DATA INIZIO"]);
       $('#info #enddate .date').text(d["DATA FINE"]);
 
-      $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName);
+      $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName + ' - richiesta info');
 
       $('#info .modal-info').append(d["ABSTRACT"]);
       $('#info .modal-info').append($('<br>'));
@@ -553,6 +562,12 @@ function onNodeLeave(elm, source) {
   }
   var y = d3.select(elm).select("rect").attr("initialHeight") / 2;
   d3.select(elm).select(".node-title").transition().duration(300).attr("x", 42).attr("y", y).attr("text-anchor", "start");
+
+  if (source.group == d3.select(elm).attr("group")) {
+    d3.select(elm).select(".node-title").text(sizedText(d3.select(elm).attr("name"), textLength + 10));
+  } else {
+    d3.select(elm).select(".node-title").text(sizedText(d3.select(elm).attr("name"), textLength));
+  }
 	
   if (bis) {
     d3.select(elm).select(".detail-icon").transition().duration(300).attr("y", y + 25);
