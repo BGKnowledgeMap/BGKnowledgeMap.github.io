@@ -29,6 +29,7 @@ text {
   text-shadow: 0 1px 0 #fff;
 }
 
+.share-icon,
 .mail-icon {
   font-family: 'FontAwesome', serif;
   font-size: 20px;
@@ -101,9 +102,10 @@ div#info td {
   vertical-align: top;
 }
 
+div#info a,
 div#info h4 {
   font-family: 'Gabriela', serif;
-  margin: 0px 20px 0px 10px;
+  /*margin: 0px 20px 0px 10px;*/
 }
 
 div#info .row {
