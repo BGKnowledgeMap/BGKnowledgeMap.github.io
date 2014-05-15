@@ -72,7 +72,6 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 
 function getData(source, target, cb, cbtitle) {
-  console.log('getdata');
   if (!_.isEqual(_.last(history), {source: source, target: target})) {
     history.push({source: source, target: target});
     updateBreadcrumb(history);
