@@ -54,13 +54,13 @@ text {
 #orobix-logo p {
   text-align: justify;
   font-family: 'Gabriela', serif;
-  font-size: 11px;
+  font-size: 10px;
   margin-bottom: 0px;
 }
 
 #orobix-logo img {
   vertical-align: sub;
-  width: 79px;
+  width: 73px;
 }
 
 .modal-header a {
