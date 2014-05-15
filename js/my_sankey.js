@@ -9,6 +9,26 @@ var maxUnlinkedLinks = 40;
 var lastEnteredNode;
 var emailAddress = 'smartercitizens@unibg.it';
 
+/* input */
+var source = {name: "", group: "MACROAREA"};
+var target = null;
+getData(source, target);
+/* ***** */
+
+/* Routing */
+var viewProject = function(title) {
+  history = [];
+  getData(source, target, showProjectDetail, title);
+}
+
+var routes = {
+  '/title/:title': viewProject
+};
+
+var router = Router(routes);
+router.init();
+/***/
+
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
     width = $(window).width() - margin.left - margin.right,
     height = $(window).height() - margin.top - margin.bottom - 200;
@@ -46,9 +66,11 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
   click = "touchstart"; 
 }
 
-function getData(source, target) {
-  history.push({source: source, target: target});
-  updateBreadcrumb(history);
+function getData(source, target, cb, cbtitle) {
+  if (!_.isEqual(_.last(history), {source: source, target: target})) {
+    history.push({source: source, target: target});
+    updateBreadcrumb(history);
+  }
 
   //init
   graph = {nodes:[], links:[]};
@@ -227,6 +249,8 @@ function getData(source, target) {
         .layout(32);
 	    
     plotGraph(source);
+    //callback if hash title
+    if (cb) cb(cbtitle);
   })
 }
 
@@ -406,7 +430,8 @@ function plotGraph(source) {
       })
       .text(function() { return "\uf129" })
       .on(click, function() {
-        showProjectDetail($(this).attr("name"));
+        //document.location.hash = '#/title/' + $(this).attr("name").replace(/ /g, '_'); //TODO remove special chars
+	showProjectDetail($(this).attr("name"));
       });
 
   window.addEventListener('touchstart', function() {
@@ -415,17 +440,23 @@ function plotGraph(source) {
 };
 
 function showProjectDetail(projectName) {
-  d3.event.preventDefault();
-  d3.event.stopPropagation();
+  /*d3.event.preventDefault();
+  d3.event.stopPropagation();*/
 
   $('#info .modal-info').empty();
   _.each(inputData, function(d) {
-    if (_.contains(d["TITOLO"], projectName)) {
+    //if (_.contains(d["TITOLO"], projectName)) {
+    if (urlFormat(d["TITOLO"][0]) == urlFormat(projectName)) {
       $('#info .modal-title').text(d["TITOLO"]);
       $('#info #startdate .date').text(d["DATA INIZIO"]);
       $('#info #enddate .date').text(d["DATA FINE"]);
 
       $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName + ' - richiesta info');
+
+      var link = window.location.origin + window.location.pathname + '#/title/' + urlFormat(projectName);
+      
+      $('#info .fb-share').attr('link', link);
+      $('#info .twitter-share').attr('link', link);
 
       $('#info .modal-info').append(d["ABSTRACT"]);
       $('#info .modal-info').append($('<br>'));
@@ -452,6 +483,30 @@ function showProjectDetail(projectName) {
       return;
     }
   })
+}
+
+$('#info').on('hidden.bs.modal', function (e) {
+  document.location.hash = '/';
+})
+
+function fbshareLink(elm) {
+  var link = $(elm).attr('link');
+  var leftPosition = (window.screen.width / 2) - ((600 / 2) + 10);
+  var topPosition = (window.screen.height / 2) - ((300 / 2) + 50);
+  
+  window.open("https://www.facebook.com/sharer/sharer.php?u="+ escape(link) + "&t=" + document.title,
+               'facebook', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600,left='+leftPosition+',top='+topPosition);
+  return false;
+}
+
+function twittershareLink(elm) {
+  var link = $(elm).attr('link');
+  var leftPosition = (window.screen.width / 2) - ((600 / 2) + 10);
+  var topPosition = (window.screen.height / 2) - ((300 / 2) + 50);
+  
+  window.open("http://twitter.com/share?url=" + escape(link) + "&text=" + document.title,
+               'tweet', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=300,width=600,left='+leftPosition+',top='+topPosition);
+  return false;
 }
 
 function zoomInNode(node, diff) {
@@ -538,6 +593,14 @@ function sizedText(string, n) {
   if (string.length > n + 1) points = '...';
   var string = string.substring(0, n);
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase() + points;
+}
+
+function urlFormat(string) {
+  string = string.replace(/[^a-zA-Z0-9-_]/g, '_');
+  //string = encodeURI(string);
+  //console.log(string);
+
+  return string;
 }
 
 function onNodeLeave(elm, source) {

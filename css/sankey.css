@@ -29,12 +29,21 @@ text {
   text-shadow: 0 1px 0 #fff;
 }
 
+.modal-header a {
+  text-decoration: none;
+}
+
 .share-icon,
 .mail-icon {
   font-family: 'FontAwesome', serif;
-  font-size: 20px;
+  font-size: 24px;
   font-style: normal;
   cursor: pointer;
+  vertical-align: sub;
+}
+
+.twitter-share-button {
+  vertical-align: text-top;
 }
 
 text.back-icon,
