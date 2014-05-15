@@ -14,7 +14,16 @@ body {
   -webkit-user-select: none; /* Chrome/Safari */        
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* IE10+ */
-  overflow-x: hidden;
+  overflow-x: auto;
+  font-family: 'Gabriela', serif;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+@media(min-width:767px) {
+  body {
+    overflow-x: hidden;
+  }
 }
 
 .node rect {
@@ -27,6 +36,31 @@ text {
   font-family: 'Gabriela', serif;
   /*pointer-events: none;*/
   text-shadow: 0 1px 0 #fff;
+}
+
+#orobix-logo {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 20px 10px 20px 10px;
+  float: right;
+}
+
+#orobix-logo a {
+  text-decoration: none;
+  color: rgb(31, 119, 180);
+}
+
+#orobix-logo p {
+  text-align: justify;
+  font-family: 'Gabriela', serif;
+  font-size: 11px;
+  margin-bottom: 0px;
+}
+
+#orobix-logo img {
+  vertical-align: sub;
+  width: 79px;
 }
 
 .modal-header a {

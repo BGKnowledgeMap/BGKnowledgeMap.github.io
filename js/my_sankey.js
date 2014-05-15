@@ -37,6 +37,8 @@ router.init();
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
     width = $(window).width() - margin.left - margin.right,
     height = $(window).height() - margin.top - margin.bottom - 200;
+
+width = width < 767 ? 767 : width;
  
 var formatNumber = d3.format(",.0f"), // zero decimal places
     format = function(d) { return formatNumber(d) + " " + units; },
@@ -425,7 +427,7 @@ function showProjectDetail(projectName) {
   _.each(inputData, function(d) {
     //if (_.contains(d["TITOLO"], projectName)) {
     if (urlFormat(d["TITOLO"][0]) == urlFormat(projectName)) {
-      $('#info .modal-title').text(d["TITOLO"]);
+      $('#info .modal-title').text(d["TITOLO"][0].charAt(0).toUpperCase() + d["TITOLO"][0].slice(1).toLowerCase());
       $('#info #startdate .date').text(d["DATA INIZIO"]);
       $('#info #enddate .date').text(d["DATA FINE"]);
 
