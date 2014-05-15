@@ -430,6 +430,7 @@ function showProjectDetail(projectName) {
       $('#info #enddate .date').text(d["DATA FINE"]);
 
       $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName + ' - richiesta info');
+      $('#info .mailto').attr('title', 'Richiedi altre informazioni a ' + emailAddress);
 
       var link = window.location.origin + window.location.pathname + '#/title/' + urlFormat(projectName);
       
