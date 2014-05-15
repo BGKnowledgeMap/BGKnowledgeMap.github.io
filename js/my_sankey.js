@@ -12,7 +12,12 @@ var emailAddress = 'smartercitizens@unibg.it';
 /* input */
 var source = {name: "", group: "MACROAREA"};
 var target = null;
-getData(source, target);
+
+$(document).ready(function() {
+  if(window.location.hash == "" || window.location.hash == "#/") {
+    getData(source, target);
+  }
+});
 /* ***** */
 
 /* Routing */
@@ -67,6 +72,7 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 
 function getData(source, target, cb, cbtitle) {
+  console.log('getdata');
   if (!_.isEqual(_.last(history), {source: source, target: target})) {
     history.push({source: source, target: target});
     updateBreadcrumb(history);
@@ -181,7 +187,7 @@ function getData(source, target, cb, cbtitle) {
 	_.each(d[target], function(dt) {
 	  if (_.where(graph.nodes, {name: dt, group: target}).length == 0) return; //node esists
 	  var link = {
-	    source: _.where(rootNodes, {name: d[source.group][0]})[0].id, //TODO ok?
+	    source: _.where(rootNodes, {name: d[source.group][0]})[0].id,
 	    target: _.where(graph.nodes, {name: dt, group: target})[0].id,
 	    value: 1
 	  };
@@ -328,32 +334,6 @@ function plotGraph(source) {
       })
       .on(nodeleave, function() {
         onNodeLeave(this, source);
-	/*if (d3.select(this).select(".detail-icon")[0][0] && d3.select(this).select(".back-icon")[0][0]) {
-	  var bis = true;
-	} else {
-	  var bis = false;
-	}
-
-        if (d3.select(this).select("rect").attr("height") != d3.select(this).select("rect").attr("initialHeight")) {
-	  zoomOutNode(this);
-	}
-
-        d3.select(".halfPie").remove();
-        d3.select(".halfPie2").remove();
-	
-	if (source.name && d3.select(this).attr("group") == source.group && d3.select(this).attr("name") != source.name) {
-	  d3.select(this).select("rect").style("fill", "#CCCCCC");
-	}
-	var y = d3.select(this).select("rect").attr("initialHeight") / 2;
-	d3.select(this).select(".node-title").transition().duration(300).attr("x", 42).attr("y", y).attr("text-anchor", "start");
-	
-	if (bis) {
-          d3.select(this).select(".detail-icon").transition().duration(300).attr("y", y + 25);
-	  d3.select(this).select(".back-icon").transition().duration(300).attr("y", y - 5);
-	} else {
-	  d3.select(this).select(".detail-icon").transition().duration(300).attr("y", y);
-	  d3.select(this).select(".back-icon").transition().duration(300).attr("y", y);
-	}*/
       });
 
   nodeg//.transition()
@@ -430,7 +410,6 @@ function plotGraph(source) {
       })
       .text(function() { return "\uf129" })
       .on(click, function() {
-        //document.location.hash = '#/title/' + $(this).attr("name").replace(/ /g, '_'); //TODO remove special chars
 	showProjectDetail($(this).attr("name"));
       });
 
