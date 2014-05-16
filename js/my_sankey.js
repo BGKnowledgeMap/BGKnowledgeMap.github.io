@@ -21,13 +21,18 @@ $(document).ready(function() {
 /* ***** */
 
 /* Routing */
-var viewProject = function(title) {
+var viewProject = function(sourcename, sourcegroup, target, title) {
+  console.log(source, target, title);
+  source = {
+    name: sourcename,
+    group: sourcegroup
+  }
   history = [];
   getData(source, target, showProjectDetail, title);
 }
 
 var routes = {
-  '/title/:title': viewProject
+  '/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:title': viewProject
 };
 
 var router = Router(routes);
@@ -257,7 +262,7 @@ function getData(source, target, cb, cbtitle) {
 	    
     plotGraph(source);
     //callback if hash title
-    if (cb) cb(cbtitle);
+    if (cb) cb(cbtitle, {source: source, target: target});
   })
 }
 
@@ -411,7 +416,7 @@ function plotGraph(source) {
       })
       .text(function() { return "\uf129" })
       .on(click, function() {
-	showProjectDetail($(this).attr("name"));
+	showProjectDetail($(this).attr("name"), _.last(history));
       });
 
   window.addEventListener('touchstart', function() {
@@ -419,7 +424,7 @@ function plotGraph(source) {
   }, false);
 };
 
-function showProjectDetail(projectName) {
+function showProjectDetail(projectName, background) {
   /*d3.event.preventDefault();
   d3.event.stopPropagation();*/
 
@@ -434,8 +439,8 @@ function showProjectDetail(projectName) {
       $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName + ' - richiesta info');
       $('#info .mailto').attr('title', 'Richiedi altre informazioni a ' + emailAddress);
 
-      var link = window.location.origin + window.location.pathname + '#/title/' + urlFormat(projectName);
-      
+      var link = window.location.origin + window.location.pathname + '#/sourcename/' + urlFormat(background.source.name) + '/sourcegroup/' + urlFormat(background.source.group) + '/target/' + urlFormat(background.target) + '/title/' + urlFormat(projectName);
+
       $('#info .fb-share').attr('link', link);
       $('#info .twitter-share').attr('link', link);
 
@@ -446,7 +451,7 @@ function showProjectDetail(projectName) {
       //websites
       _.each(d["WEBSITES"], function(website) {
         var http = website.substring(0, 7) == "http://" ? "" : "http://";
-        var a = $('<a></a>').attr('href', http + website).text(website);
+        var a = $('<a></a>').attr('href', http + website).attr('target', '_blank').text(website);
          $('#info .modal-info').append(a);
          $('#info .modal-info').append($('<br>'));
          $('#info .modal-info').append($('<br>'));

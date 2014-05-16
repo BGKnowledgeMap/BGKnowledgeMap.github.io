@@ -1,59 +1,222 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
-<title>BGKnowledgeMap</title>
-<link rel="stylesheet" href="css/bootstrap.css">
-<link rel="stylesheet" href="css/sankey.css">
-<body>
+<html lang="en">
 
-<div id="orobix-logo">
-  <a href="http://www.orobix.com/">
-    <p>Created at</p>
-    <img src="img/orobix-logo.png">
-    <p>by Sara Zanchi</p>
-  </a>
-</div>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<div id="breadcrumb"></div>
-<div id="chart"></div>
+    <title>Bergamo Knowledge Map</title>
 
-<!-- Modal -->
-<div id="info" class="modal bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	<h4 class="modal-title"></h4>
-	<a class="mailto" data-toggle="tooltip" data-placement="left" title="Richiedi altre informazioni"><i class="mail-icon">&#xf0e0;</i></a>
-	<a class="fb-share" onclick="fbshareLink(this)" data-toggle="tooltip" data-placement="left" title="Condividi su Facebook"><i class="share-icon">&#xf082;</i></a>
-	<a class="twitter-share" onclick="twittershareLink(this)" data-toggle="tooltip" data-placement="left" title="Condividi su Twitter"><i class="share-icon">&#xf081;</i></a>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-	  <div class="col-sm-6" id="startdate">
-	    <p>Data inizio</p>
-	    <p class="date"></p>
-	  </div>
-	  <div class="col-sm-6" id="enddate">
-	    <p>Data fine</p>
-	    <p class="date"></p>
-	  </div>
-	</div>
+    <!-- Bootstrap Core CSS -->
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
-	<div class="modal-info"></div>
-      </div>
-    </div>
-  </div>
-</div>
- 
-<script src="js/d3.v3.js"></script>
-<script src="js/underscore.js"></script>
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.js"></script>
-<script src="js/director.min.js"></script>
+    <!-- Fonts -->
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
 
-<script src="js/breadcrumb.js"></script>
-<script src="js/sankey.js"></script>
-<script src="js/my_sankey.js"></script>
-<script src="js/halfPie.js"></script>
+    <!-- Custom Theme CSS -->
+    <link href="css/grayscale.css" rel="stylesheet">
+</head>
+
+<body id="page-top" data-spy="scroll" data-target=".navbar-custom">
+
+    <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
+        <div class="container">
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <a class="navbar-brand" href="#page-top">
+		  <!--<img src="img/logo.png">&nbsp;<p align="left">Knowledge Map<br /> Mappa della conoscenza</p>-->
+		  <div class="navbar-logo">
+		    <img src="img/logo.png">
+		    <p>Knowledge Map<br/><subtext>Mappa della conoscenza</subtext></p>
+		  </div>
+		</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+                <ul class="nav navbar-nav">
+                    <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+                    <li class="hidden">
+                        <a href="#page-top"></a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#about"><br>Cos'è</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#howitworks"><br>Come funziona</a>
+                    </li>
+                    <li class="page-scroll">
+                        <a href="#projects">I progetti di Bergamo</a>
+                    </li>
+		    <li class="page-scroll">
+                        <a href="#contribute">Contribuisci con il tuo progetto</a>
+                    </li>
+		    <!--<li class="col-xs-12 col-sm-3 col-md-3 col-lg-3 pull-right">
+		      <div class="input-group">
+                        <input type="text" class="form-control input-sm">
+			<span class="input-group-btn">
+                          <button class="btn btn-default btn-sm" type="button"><i class="fa fa-search"></i></button>
+                        </span>
+                      </div>
+                    </li>-->
+		  </ul>
+            </div>
+            <!-- /.navbar-collapse -->
+        </div>
+        <!-- /.container -->
+    </nav>
+
+    <section class="intro">
+        <div class="intro-body">
+            <div class="container">
+                <div class="row">
+                    <div class="col-xs-12 col-lg-12" style="margin-bottom: -20px;">
+		        <div class="intro-gif">
+			  <img src="img/gif-animation.gif">
+                          <div class="caption over-link">
+                            <a href="http://bgknowledgemap.github.io/sankey.html">vai alla visualizzazione&nbsp;<i class="fa fa-external-link-square"></i></a>
+                          </div>
+			</div>
+		    </div>
+		    <div class="col-xs-8 col-lg-8 col-xs-offset-2 col-lg-offset-2">
+		        <div class="intro-logo">
+			  <img src="img/logo.png">
+			  <p>Knowledge Map<br/><subtext>Mappa della conoscenza</subtext></p>
+			</div>
+			<h6>Un'esperienza interattiva nella progettualità di Bergamo</h6>
+			<div class="row">
+			  <div class="col-xs-2 col-lg-2 col-xs-offset-2 col-lg-offset-2" id="logo1" onclick="window.open('http://www.bergamo2035.it/');"></div>
+			  <div class="col-xs-2 col-lg-2" id="logo2" onclick="window.open('http://www.unibg.it/');"></div>
+			  <div class="col-xs-2 col-lg-2" id="logo3" onclick="window.open('http://www.gsd.harvard.edu/');"></div>
+			  <div class="col-xs-2 col-lg-2" id="logo4" onclick="window.open('http://research.gsd.harvard.edu/real/');"></div>
+			  <!--<div class="col-xs-2 col-lg-2" id="logo5">
+			    <a href=""><i class="fb-icon fa fa-facebook fa-3x"></i></a>
+			    <a href="">Mi piace</a>
+			    <a href="">Condividi</a>
+			  </div>-->
+			</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="page-scroll">
+      <a href="#about" class="btn-scroll">
+        <i class="fa fa-angle-down animated"></i>
+      </a>
+    </section>
+
+    <section id="about" class="content-section">
+        <div class="container">
+            <div>
+                <h2>Cos'è</h2>
+                <p align="justify">All’interno del territorio bergamasco esistono una serie di relazioni tra istituzioni, organizzazioni, industria e associazioni, le quali trovano la loro espressione formale attraverso progetti di ricerca realizzati collaborativamente. Purtroppo, raramente queste collaborazioni sono visibili all’esterno e molto spesso non vengono conosciute dalla cittadinanza e da altri potenziali stakeholders.</p>
+		<p>Per dare una prima risposta a questo problema, il gruppo di ricerca di <b>Bergamo 2.035</b> si è attivato per sviluppare una Mappa Virtuale delle Relazioni - informativa, dinamica e interattiva - che consenta di mettere in evidenza in maniera chiara e stimolante i numerosi progetti sviluppati dagli stakeholder del territorio e individuare i legami in essere tra queste entità.</p>
+		<p>Questa Mappa, denominata “<b>Mappa della Conoscenza</b>” ha l’obiettivo di fare rete sul territorio, evidenziando i legami e i progetti già esistenti e permettendo a nuovi stakeholder di unirsi alla rete rendendo visibile il proprio progetto o proponendo nuovi progetti e cordate.</p>
+		<p style="margin-bottom: 10px">La mappa consente di navigare all’interno dei progetti rispetto a:</p>
+		  <ul>
+		    <li>macroarea</li>
+		    <li>titolo</li>
+                    <li>promotore</li>
+                    <li>commitente/finaziatore</li>
+                    <li>partners</li>
+		  </ul>
+		<p align="justify">Consente inoltre di conoscere alcune informazioni del progetto stesso, come l’abstract, la data inizio-fine e il sito internet, di condividere sui principali social network un progetto di interesse, di contattare il promotore del progetto per avere ulteriori informazioni.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="howitworks" class="content-section">
+        <div class="howitworks-section">
+            <div class="container">
+                <div>
+                  <h2>Come funziona</h2>
+		  <div class="row">
+                    <div class="col-xs-12 col-lg-12 video">
+			<embed width="520" height="445" src="https://www.youtube.com/v/jkReMtwUiCI&vq=hd720" type="application/x-shockwave-flash"></embed>
+                        <div class="caption">
+                          <p class="text-center">Guarda il video e scopri le funzionalità della mappa.</p>
+                        </div>
+                    </div>
+                  </div>
+                  <div class="row">
+	            <div class="col-lg-6">
+	              <h4>La visualizzazione</h4>
+	              <p>La mappa si basa su un metodo di rappresentazione grafica di flussi: il Sankey Diagram. Questo diagramma è solitamente usato per visualizzare i flussi di energia o di materiali scambiati tra gli elementi che costituiscono un sistema più o meno complesso. È costituito da un insieme di linee di larghezza proporzionale alle quantità che passano da una parte all'altra del sistema. Nel caso della Mappa della Conoscenza la linea è proporzionale alla quantità di relazioni tra un elemento e un altro, inoltre è possibile navigare attraverso più elementi, grazie all’utilizzo di diagrammi a semi-torta che consentono la scelta dell’elemento di interesse (macroarea del progetto, titolo, promotore, commitente/finaziatore, patners).<br>La visualizzazione è stata realizzata da Orobix s.r.l in javaScript utilizzando le librerie D3 (<a href="http://d3js.org/">d3js.org</a>) e jQuery (<a href="http://jquery.com/">jquery.com</a>).</p>
+	            </div>
+	            <div class="col-lg-6">
+	              <h4>I dati</h4>
+	              <p>I dati dei progetti che sono all’interno della Mappa della Conoscenza sono stati raccolti attraverso l’invio dei promotori del progetto dei dati del progetto stesso tramite compilazione di un semplice form Google Drive. Il gestore della piattaforma condivide con il potenziale stakeholder un primo form per registrare lo stakeholder stesso e un secondo form per tutti i progetti che questi voglia inserire. I dati quindi sono dinamici e variano nel tempo e dipendono ovviamente dalla partecipazione attiva degli stakeholders. Link a contribuisci con il tuo progetto</p>
+	            </div>
+	          </div>
+		</div>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects" class="content-section">
+        <div class="container">
+            <div>
+                <h2>I progetti di Bergamo</h2>
+		<h4>Quanti sono i progetti a Bergamo? (*):</h4>
+		<table class="table" id="statistics1"></table>
+
+		<div class="row">
+		  <div class="col-lg-4">
+		    <h4>Chi promuove più progetti?</h4>
+		    <table class="table" id="statistics2"></table>
+		  </div>
+		  <div class="col-lg-4">
+		    <h4>Chi ha più collaborazioni?</h4>
+		    <table class="table" id="statistics3"></table>
+		  </div>
+		  <div class="col-lg-4">
+		    <h4>Chi finanzia pi&ugrave; progetti?</h4>
+		    <table class="table" id="statistics4"></table>
+		  </div>
+		</div>
+
+		<em>* Dati ricavati da database Università di Bergamo più schede compilate dagli stakeholders.</em>
+            </div>
+        </div>
+    </section>
+
+    <section id="contribute" class="content-section">
+        <div class="container">
+            <div>
+                <h2>Contribuisci con il tuo progetto</h2>
+		<div class="row">
+		<div class="col-lg-6 text-center">
+		  <h4 style="margin-bottom: 15px;">Invia la richiesta per inserire il tuo/i tuoi progetti nella mappa!</h4>
+		  <a href="mailto:smartercitizens@unibg.it?subject=richiesta di registrazione | Knowledge Map - Mappa della Conoscenza&body=Desidero iscrivermi alla piattaforma Knowledge Map - Mappa della Conoscenza e poter inserire i miei progetti." class="btn btn-default btn-lg">
+		    Invia
+		    <br>
+		    <i class="fa fa-envelope fa-fw"></i>&nbsp;<i class="mailAddress">smartercitizens@unibg.it<i>
+		  </a>
+		</div>
+		<div class="col-lg-6">
+                  <p>Inviando la richiesta ti verrà richiesto di compilare un breve form online con alcuni tuoi dati, e i dati dell’ente che rappresenti. Successivamente ti verrà inviato un form da compilare con i dati di ogni tuo progetto. Sono sufficienti pochi minuti. Cosa aspetti, contribuisci anche tu con il tuo progetto e rendilo visibile a tutti!</p>
+		</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Core JavaScript Files -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="js/grayscale.js"></script>
+    <script src="js/underscore.js"></script>
+    <script src="js/statistics.js"></script>
+
 </body>
 </html>
