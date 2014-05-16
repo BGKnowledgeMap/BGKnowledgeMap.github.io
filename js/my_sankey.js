@@ -21,18 +21,14 @@ $(document).ready(function() {
 /* ***** */
 
 /* Routing */
-var viewProject = function(sourcename, sourcegroup, target, title) {
-  console.log(source, target, title);
-  source = {
-    name: sourcename,
-    group: sourcegroup
-  }
+var viewProject = function(title) {
   history = [];
   getData(source, target, showProjectDetail, title);
 }
 
 var routes = {
-  '/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:title': viewProject
+  //'/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:title': viewProject
+  '/title/:title': viewProject
 };
 
 var router = Router(routes);
@@ -262,7 +258,7 @@ function getData(source, target, cb, cbtitle) {
 	    
     plotGraph(source);
     //callback if hash title
-    if (cb) cb(cbtitle, {source: source, target: target});
+    if (cb) cb(cbtitle);
   })
 }
 
@@ -298,45 +294,9 @@ function plotGraph(source) {
       .attr("group", function(d) { return d.group })
       .attr("name", function(d) { return d.name })
       .on(nodeenter, function(d) {
-        d3.event.preventDefault();
-	d3.event.stopPropagation();
-
-	if (lastEnteredNode && lastEnteredNode != this) onNodeLeave(lastEnteredNode, source);
-	lastEnteredNode = this;
-
-        d3.select(this).select(".detail-icon").classed("show", true);
-        d3.select(this).select(".back-icon").classed("show", true);
-
-        if (d3.select(this).select(".detail-icon")[0][0] && d3.select(this).select(".back-icon")[0][0]) {
-	  var bis = true;
-	} else {
-	  var bis = false;
-	}
-	
-	d3.select(this).select("rect").style("fill", color(d3.select(this).attr("name")));
-	d3.select(this).select(".node-title").transition().duration(300).attr("x", -10).attr("text-anchor", "end");
-
-	if (source.group == d3.select(this).attr("group")) {
-          d3.select(this).select(".node-title").text(sizedText(d3.select(this).attr("name"), textLength));
-	} else {
-	  d3.select(this).select(".node-title").text(sizedText(d3.select(this).attr("name"), textLength + 10));
-	}
-	
-        halfPie(this, groupList);
-	if (d3.select(this).select("rect").attr("height") < 100) {
-	  var diff = 100 - d3.select(this).select("rect").attr("height");
-	  d3.select(this).select(".node-title").transition().duration(300).attr("y", 50).attr("x", -10).attr("text-anchor", "end");
-
-	  if (bis) {
-	    d3.select(this).select(".detail-icon").transition().duration(300).attr("y", 55 + 15);
-	    d3.select(this).select(".back-icon").transition().duration(300).attr("y", 55 - 10);
-	  } else {
-	    d3.select(this).select(".detail-icon").transition().duration(300).attr("y", 55);
-	    d3.select(this).select(".back-icon").transition().duration(300).attr("y", 55);
-	  }
-
-	  zoomInNode(this, diff);
-	}
+        //if (lastEnteredNode) onNodeLeave(lastEnteredNode, source, onNodeEnter, this);
+        //else onNodeEnter(this);
+	onNodeEnter(this);
       })
       .on(nodeleave, function() {
         onNodeLeave(this, source);
@@ -416,7 +376,7 @@ function plotGraph(source) {
       })
       .text(function() { return "\uf129" })
       .on(click, function() {
-	showProjectDetail($(this).attr("name"), _.last(history));
+	showProjectDetail($(this).attr("name"));
       });
 
   window.addEventListener('touchstart', function() {
@@ -424,7 +384,7 @@ function plotGraph(source) {
   }, false);
 };
 
-function showProjectDetail(projectName, background) {
+function showProjectDetail(projectName) {
   /*d3.event.preventDefault();
   d3.event.stopPropagation();*/
 
@@ -439,7 +399,8 @@ function showProjectDetail(projectName, background) {
       $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName + ' - richiesta info');
       $('#info .mailto').attr('title', 'Richiedi altre informazioni a ' + emailAddress);
 
-      var link = window.location.origin + window.location.pathname + '#/sourcename/' + urlFormat(background.source.name) + '/sourcegroup/' + urlFormat(background.source.group) + '/target/' + urlFormat(background.target) + '/title/' + urlFormat(projectName);
+      //var link = window.location.origin + window.location.pathname + '#/sourcename/' + urlFormat(background.source.name) + '/sourcegroup/' + urlFormat(background.source.group) + '/target/' + urlFormat(background.target) + '/title/' + urlFormat(projectName);
+      var link = window.location.origin + window.location.pathname + '#/title/' + urlFormat(projectName);
 
       $('#info .fb-share').attr('link', link);
       $('#info .twitter-share').attr('link', link);
@@ -499,15 +460,15 @@ function zoomInNode(node, diff) {
   d3.select(node).select("rect")
     .transition()
     .attr("height", 100);
-  
+ 
   //move next
   var selectedGroup = d3.select(node).attr("group");
   var next = node.nextSibling;
   while (d3.select(next).attr("group") == selectedGroup && d3.select(next).attr("name") != "hidden") {
-    var txy = getXYFromTranslate(d3.select(next).attr("transform"));
+    var txy = getXYFromTranslate(d3.select(next).attr("initialTransform"));
     d3.select(next)
       .transition()
-      .attr("transform", function(d, i) { return "translate(" + parseInt(txy[0]) + ", " + (parseInt(txy[1]) + diff) + ")"});
+      .attr("transform", function(d) { return "translate(" + parseInt(txy[0]) + ", " + (parseInt(txy[1]) + diff) + ")"});
 
     next = next.nextSibling;
   }
@@ -518,7 +479,7 @@ function zoomOutNode(node) {
     .transition()
     .attr("height", d3.select(node).select("rect").attr("initialHeight"));
 
-  //back all
+  //back all next
   var selectedGroup = d3.select(node).attr("group");
   var next = node.nextSibling;
   while (next && d3.select(next).attr("group") == selectedGroup && d3.select(next).attr("name") != "hidden") {
@@ -587,6 +548,49 @@ function urlFormat(string) {
   //console.log(string);
 
   return string;
+}
+
+function onNodeEnter(elm) {
+  d3.event.preventDefault();
+  d3.event.stopPropagation();
+
+  if (lastEnteredNode) onNodeLeave(lastEnteredNode, source);
+  lastEnteredNode = elm;
+
+  d3.select(elm).select(".detail-icon").classed("show", true);
+  d3.select(elm).select(".back-icon").classed("show", true);
+
+  if (d3.select(elm).select(".detail-icon")[0][0] && d3.select(elm).select(".back-icon")[0][0]) {
+    var bis = true;
+  } else {
+    var bis = false;
+  }
+	
+  d3.select(elm).select("rect").style("fill", color(d3.select(elm).attr("name")));
+  d3.select(elm).select(".node-title").transition().duration(300).attr("x", -10).attr("text-anchor", "end");
+  
+  if (source.group == d3.select(elm).attr("group")) {
+    d3.select(elm).select(".node-title").text(sizedText(d3.select(elm).attr("name"), textLength));
+  } else {
+    d3.select(elm).select(".node-title").text(sizedText(d3.select(elm).attr("name"), textLength + 10));
+  }
+  	
+  halfPie(elm, groupList);
+
+  if (d3.select(elm).select("rect").attr("height") < 100) {
+    var diff = 100 - d3.select(elm).select("rect").attr("height");
+    d3.select(elm).select(".node-title").transition().duration(300).attr("y", 50).attr("x", -10).attr("text-anchor", "end");
+  
+    if (bis) {
+      d3.select(elm).select(".detail-icon").transition().duration(300).attr("y", 55 + 15);
+      d3.select(elm).select(".back-icon").transition().duration(300).attr("y", 55 - 10);
+    } else {
+      d3.select(elm).select(".detail-icon").transition().duration(300).attr("y", 55);
+      d3.select(elm).select(".back-icon").transition().duration(300).attr("y", 55);
+    }
+  
+    zoomInNode(elm, diff);
+  }
 }
 
 function onNodeLeave(elm, source) {
