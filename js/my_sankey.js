@@ -21,18 +21,21 @@ $(document).ready(function() {
 /* ***** */
 
 /* Routing */
-var viewProject = function(title) {
+routie('/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:title', function(sourcename, sourcegroup, target, title) {
   history = [];
+  //load home
+  history.push({
+    source: {name: "", group: "MACROAREA"},
+    target: null
+  });
+
+  var source = {
+    name: sourcename,
+    group: sourcegroup
+  }
+  
   getData(source, target, showProjectDetail, title);
-}
-
-var routes = {
-  //'/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:title': viewProject
-  '/title/:title': viewProject
-};
-
-var router = Router(routes);
-router.init();
+});
 /***/
 
 var margin = { top: 10, right: 0, bottom: 10, left: 0 },
@@ -258,7 +261,7 @@ function getData(source, target, cb, cbtitle) {
 	    
     plotGraph(source);
     //callback if hash title
-    if (cb) cb(cbtitle);
+    if (cb) cb(cbtitle, _.last(history));
   })
 }
 
@@ -294,8 +297,6 @@ function plotGraph(source) {
       .attr("group", function(d) { return d.group })
       .attr("name", function(d) { return d.name })
       .on(nodeenter, function(d) {
-        //if (lastEnteredNode) onNodeLeave(lastEnteredNode, source, onNodeEnter, this);
-        //else onNodeEnter(this);
 	onNodeEnter(this);
       })
       .on(nodeleave, function() {
@@ -376,7 +377,7 @@ function plotGraph(source) {
       })
       .text(function() { return "\uf129" })
       .on(click, function() {
-	showProjectDetail($(this).attr("name"));
+	showProjectDetail($(this).attr("name"), _.last(history));
       });
 
   window.addEventListener('touchstart', function() {
@@ -384,14 +385,14 @@ function plotGraph(source) {
   }, false);
 };
 
-function showProjectDetail(projectName) {
+function showProjectDetail(projectName, background) {
   /*d3.event.preventDefault();
   d3.event.stopPropagation();*/
 
   $('#info .modal-info').empty();
   _.each(inputData, function(d) {
-    //if (_.contains(d["TITOLO"], projectName)) {
-    if (urlFormat(d["TITOLO"][0]) == urlFormat(projectName)) {
+    if (_.contains(d["TITOLO"], projectName)) {
+    //if (d["TITOLO"][0] == projectName) {
       $('#info .modal-title').text(d["TITOLO"][0].charAt(0).toUpperCase() + d["TITOLO"][0].slice(1).toLowerCase());
       $('#info #startdate .date').text(d["DATA INIZIO"]);
       $('#info #enddate .date').text(d["DATA FINE"]);
@@ -399,8 +400,8 @@ function showProjectDetail(projectName) {
       $('#info .mailto').attr('href', 'mailto:' + emailAddress + '?subject=' + projectName + ' - richiesta info');
       $('#info .mailto').attr('title', 'Richiedi altre informazioni a ' + emailAddress);
 
-      //var link = window.location.origin + window.location.pathname + '#/sourcename/' + urlFormat(background.source.name) + '/sourcegroup/' + urlFormat(background.source.group) + '/target/' + urlFormat(background.target) + '/title/' + urlFormat(projectName);
-      var link = window.location.origin + window.location.pathname + '#/title/' + urlFormat(projectName);
+      var link = window.location.origin + window.location.pathname + '#/sourcename/' + toUrlFormat(background.source.name) + '/sourcegroup/' + toUrlFormat(background.source.group) + '/target/' + toUrlFormat(background.target) + '/title/' + toUrlFormat(projectName);
+      //var link = window.location.origin + window.location.pathname + '#/title/' + toUrlFormat(projectName);
 
       $('#info .fb-share').attr('link', link);
       $('#info .twitter-share').attr('link', link);
@@ -542,12 +543,13 @@ function sizedText(string, n) {
   return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase() + points;
 }
 
-function urlFormat(string) {
-  string = string.replace(/[^a-zA-Z0-9-_]/g, '_');
-  //string = encodeURI(string);
-  //console.log(string);
+function toUrlFormat(string) {
+  //string = string.replace(/[^a-zA-Z0-9-_]/g, '_');
+  return encodeURI(string);
+}
 
-  return string;
+function fromUrlFormat(string) {
+  return decodeURI(string);
 }
 
 function onNodeEnter(elm) {
