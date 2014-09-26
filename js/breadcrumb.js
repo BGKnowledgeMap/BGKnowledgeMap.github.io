@@ -6,10 +6,10 @@ var b_svg = d3.select("#breadcrumb").append("svg")
   .attr("width", $(window).width())
   .append("g");
 
-function updateBreadcrumb(history) {
+function updateBreadcrumb(myhistory) {
   b_svg.selectAll("g").remove();
 
-  var step = b_svg.selectAll(".step").data(_.last(history, maxItems));
+  var step = b_svg.selectAll(".step").data(_.last(myhistory, maxItems));
 
   var lines = step.enter().append("g");
 
@@ -27,7 +27,7 @@ function updateBreadcrumb(history) {
     .style("stroke-dasharray", ("3, 3"))
     .style("opacity", "0.4")
     .attr("class", function(d, i) {
-      if ((i + 1) == _.last(history, maxItems).length) return "last";
+      if ((i + 1) == _.last(myhistory, maxItems).length) return "last";
     });
   
   var circles = step.enter().append("g");

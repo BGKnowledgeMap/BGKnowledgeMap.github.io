@@ -2,7 +2,7 @@ var inputData = [];
 var graph = {nodes:[], links:[]};
 var groupMap = {};
 var groupList = [];
-var history = [];
+var myhistory = [];
 var halfPieHeight = 100;
 var textLength = 42;
 var maxUnlinkedLinks = 40;
@@ -22,9 +22,9 @@ $(document).ready(function() {
 
 /* Routing */
 routie('/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:title', function(sourcename, sourcegroup, target, title) {
-  history = [];
+  myhistory = [];
   //load home
-  history.push({
+  myhistory.push({
     source: {name: "", group: "MACROAREA"},
     target: null
   });
@@ -78,9 +78,9 @@ if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(naviga
 }
 
 function getData(source, target, cb, cbtitle) {
-  if (!_.isEqual(_.last(history), {source: source, target: target})) {
-    history.push({source: source, target: target});
-    updateBreadcrumb(history);
+  if (!_.isEqual(_.last(myhistory), {source: source, target: target})) {
+    myhistory.push({source: source, target: target});
+    updateBreadcrumb(myhistory);
   }
 
   //init
@@ -261,7 +261,7 @@ function getData(source, target, cb, cbtitle) {
 	    
     plotGraph(source);
     //callback if hash title
-    if (cb) cb(cbtitle, _.last(history));
+    if (cb) cb(cbtitle, _.last(myhistory));
   })
 }
 
@@ -346,7 +346,7 @@ function plotGraph(source) {
   // add back icon
   var backNode = node
       .filter(function(d) {
-        return d.group == _.last(history).source.group && d.name == _.last(history).source.name;
+        return d.group == _.last(myhistory).source.group && d.name == _.last(myhistory).source.name;
       })
       .append("text")
       .attr("class", "back-icon")
@@ -369,7 +369,7 @@ function plotGraph(source) {
       .attr("class", "detail-icon")
       .attr("x", 13)
       .attr("y", function(d) {
-        if (d.group == _.last(history).source.group && d.name == _.last(history).source.name) return (d.dy / 2) + 25;
+        if (d.group == _.last(myhistory).source.group && d.name == _.last(myhistory).source.name) return (d.dy / 2) + 25;
         else return (d.dy / 2) + 9;
       })
       .attr("name", function(d) {
@@ -377,7 +377,7 @@ function plotGraph(source) {
       })
       .text(function() { return "\uf129" })
       .on(click, function() {
-	showProjectDetail($(this).attr("name"), _.last(history));
+	showProjectDetail($(this).attr("name"), _.last(myhistory));
       });
 
   window.addEventListener('touchstart', function() {
@@ -519,16 +519,16 @@ function back(backTo) {
   d3.event.stopPropagation();
 
   if (!backTo) {
-    history = _.initial(history);
-    var backTo = _.last(history);
+    myhistory = _.initial(myhistory);
+    var backTo = _.last(myhistory);
 
     if (!backTo) {
       getData({name: "", group: source.group}, null);
       return;
     }
-    history = _.initial(history);
+    myhistory = _.initial(myhistory);
   } else {
-    history = _.initial(history, history.length - _.indexOf(history, backTo));
+    myhistory = _.initial(myhistory, myhistory.length - _.indexOf(myhistory, backTo));
   }
 
   getData(backTo.source, backTo.target);
