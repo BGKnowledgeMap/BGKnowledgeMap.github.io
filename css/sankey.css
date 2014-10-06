@@ -94,7 +94,10 @@ text.detail-icon.show {
 }
 
 .node > .node-title {
-  pointer-events: none;
+  /*pointer-events: none;*/
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 300;
 }
 
 .node:hover rect {
@@ -187,5 +190,6 @@ div#info #startdate {
 
 .breadcrumb-text {
   font-family: 'Gabriela', serif;
-  font-size: 10px;
+  font-size: 12px;
+  font-weight: 400;
 }

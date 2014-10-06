@@ -18,6 +18,21 @@ $(document).ready(function() {
     getData(source, target);
   }
 });
+
+/* window */
+var margin = { top: 10, right: 0, bottom: 10, left: 0 },
+    width = $(window).width() - margin.left - margin.right,
+    height = $(window).height() - margin.top - margin.bottom - 200;
+
+width = width < 767 ? 767 : width;
+
+window.onresize = function(event) {
+  width = $(window).width() - margin.left - margin.right;
+  height = $(window).height() - margin.top - margin.bottom - 200;
+  width = width < 767 ? 767 : width;
+
+  getData(_.last(myhistory).source, _.last(myhistory).target);
+};
 /* ***** */
 
 /* Routing */
@@ -38,12 +53,6 @@ routie('/sourcename/:sourcename/sourcegroup/:sourcegroup/target/:target/title/:t
 });
 /***/
 
-var margin = { top: 10, right: 0, bottom: 10, left: 0 },
-    width = $(window).width() - margin.left - margin.right,
-    height = $(window).height() - margin.top - margin.bottom - 200;
-
-width = width < 767 ? 767 : width;
- 
 var formatNumber = d3.format(",.0f"), // zero decimal places
     format = function(d) { return formatNumber(d) + " " + units; },
     color = d3.scale.category10();
@@ -58,7 +67,7 @@ var svg = d3.select("#chart").append("svg")
 // Set the sankey diagram properties
 var sankey = d3.sankey()
     .nodeWidth(36)
-    .nodePadding(10)
+    .nodePadding(15)
     .size([width, height]);
  
 var path = sankey.link();
@@ -246,10 +255,10 @@ function getData(source, target, cb, cbtitle) {
     }
     
     var visiblesourcelength = sourcenodes.length - hiddennodes;
-    var newheight = visiblesourcelength * 25 < height ? height : visiblesourcelength * 25;
+    var newheight = visiblesourcelength * 35 < height ? height : visiblesourcelength * 35;
 
     var rightlength = graph.nodes.length - visiblesourcelength;
-    newheight = newheight < rightlength * 25 ?  rightlength * 25 : newheight;
+    newheight = newheight < rightlength * 35 ?  rightlength * 35 : newheight;
   
     sankey.size([width - 660, newheight]);
     $("svg").height(newheight + halfPieHeight);
@@ -268,7 +277,7 @@ function getData(source, target, cb, cbtitle) {
 function plotGraph(source) {
   svg.selectAll(".link").remove(); //TODO selective remove
   svg.selectAll(".node").remove();
- 
+
   var link = svg.selectAll(".link")
       .data(graph.links);
 
@@ -296,8 +305,8 @@ function plotGraph(source) {
       .attr("transform", function(d) { return "translate(" + 0 + "," + d.y + ")" })
       .attr("group", function(d) { return d.group })
       .attr("name", function(d) { return d.name })
-      .on(nodeenter, function(d) {
-	onNodeEnter(this);
+      .on(click, function() {
+        onNodeEnter(this);
       })
       .on(nodeleave, function() {
         onNodeLeave(this, source);
@@ -309,19 +318,22 @@ function plotGraph(source) {
       
   // add the rectangles for the nodes
   nodeg.append("rect")
-         .attr("height", function(d) { return d.dy; })
-         .attr("initialHeight", function(d) { return d.dy; })
-         .attr("width", sankey.nodeWidth())
-         .style("fill", function(d) {
-	   if (source.name && d.group == source.group && d.name != source.name) return "#CCCCCC";
-	   return d.color = color(d.name);
-	 })
-         .style("stroke", function(d) { return d3.rgb(d.color).darker(2) })
-	 .style("stroke-width", 0)
-	 .style("opacity", 0)
-         .transition().duration(200)
-           //.delay(function(d, i) { return i * 300 })
-           .style("opacity", 1);    
+       .attr("height", function(d) { return d.dy; })
+       .attr("initialHeight", function(d) { return d.dy; })
+       .attr("width", sankey.nodeWidth())
+       /*.on(nodeenter, function() {
+         onNodeEnter(this.parentNode);
+       })*/
+       .style("fill", function(d) {
+         if (source.name && d.group == source.group && d.name != source.name) return "#CCCCCC";
+	 return d.color = color(d.name);
+       })
+       .style("stroke", function(d) { return d3.rgb(d.color).darker(2) })
+       .style("stroke-width", 0)
+       .style("opacity", 0)
+       .transition().duration(200)
+       //.delay(function(d, i) { return i * 300 })
+       .style("opacity", 1);
   
   node.exit().remove();
 
@@ -339,6 +351,9 @@ function plotGraph(source) {
         if (d.group == source.group) return sizedText(d.name, textLength + 10)
 	else return sizedText(d.name, textLength)
       })
+      /*.on(click, function() {
+        onNodeEnter(this.parentNode);
+      })*/
       .attr("opacity", 0)
       .transition().duration(500)
         .attr("opacity", 1);
@@ -553,10 +568,12 @@ function fromUrlFormat(string) {
 }
 
 function onNodeEnter(elm) {
-  d3.event.preventDefault();
-  d3.event.stopPropagation();
+  //d3.event.preventDefault();
+  //d3.event.stopPropagation();
 
-  if (lastEnteredNode) onNodeLeave(lastEnteredNode, source);
+  if (lastEnteredNode && nodeleave == "touchcancel") {
+    onNodeLeave(lastEnteredNode, source);
+  }
   lastEnteredNode = elm;
 
   d3.select(elm).select(".detail-icon").classed("show", true);

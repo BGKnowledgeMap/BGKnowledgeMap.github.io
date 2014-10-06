@@ -27,7 +27,7 @@ halfPie = function(source, piedata) {
 
     var arc2 = d3.svg.arc()              
         .outerRadius(r2 + 30)
-	      .innerRadius(ir2);
+	.innerRadius(ir2);
  
     var pie2 = d3.layout.pie()           
         .value(function(d) { return d.value; })
@@ -51,13 +51,13 @@ halfPie = function(source, piedata) {
     var vis = d3.select(source)
         .data([piedata])          
         .append("g")
-	      .attr("class", "halfPie")
+	    .attr("class", "halfPie")
             .attr("transform", "translate(" + (d3.select(source).select("rect").attr("width")-1) + "," + r + ")");
 
     var arc = d3.svg.arc()              
         .outerRadius(r)
-	      .innerRadius(ir);
- 
+        .innerRadius(ir);
+
     var pie = d3.layout.pie()           
         .value(function(d) { return d.value; })
         .startAngle(0)
@@ -88,7 +88,7 @@ halfPie = function(source, piedata) {
           .attr("opacity", 1);
 
  
-    arcs.append("text")                                     
+    arcs.append("text") 
         .attr("transform", function(d) {                    
           return "translate(" + arc.centroid(d) + ")";        
         })
