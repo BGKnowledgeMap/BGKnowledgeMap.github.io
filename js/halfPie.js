@@ -12,8 +12,8 @@ halfPie = function(source, piedata) {
     var w = 300, //width
         h = height < 100 ? 100 : height, //height
         r = h / 2, //radius
-        ir = r - 8,
-        r2 = r - 8,
+        ir = r - 15,
+        r2 = r - 15,
         ir2 = 0,
         pi = Math.PI,
         color = color;
@@ -26,7 +26,7 @@ halfPie = function(source, piedata) {
             .attr("transform", "translate(" + (d3.select(source).select("rect").attr("width")-1) + "," + r + ")");
 
     var arc2 = d3.svg.arc()              
-        .outerRadius(r2 + 30)
+        .outerRadius(r2 + 40)
 	.innerRadius(ir2);
  
     var pie2 = d3.layout.pie()           
